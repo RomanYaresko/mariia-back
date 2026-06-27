@@ -1,4 +1,4 @@
-import { MariiaStep, PrismaClient } from "@/generated/prisma/client";
+import { MariiaStep, PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 const mariiaStepSelect = {

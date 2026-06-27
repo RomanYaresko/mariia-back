@@ -1,0 +1,42 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model MariiaStep {
+  id          Int     @id @default(autoincrement())
+  isHead      Boolean @default(false)
+  title       String?
+  description String?
+  buttonText  String
+
+  isGift              Boolean @default(false)
+  foundGiftButtonText String?
+  giftName            String?
+
+  nextId   Int?        @unique
+  nextStep MariiaStep? @relation("StepChain", fields: [nextId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  prevId   Int?        @unique
+  prevStep MariiaStep? @relation("StepChain")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("mariia_steps")
+}

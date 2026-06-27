@@ -1,6 +1,7 @@
 {
   "name": "mariia-back",
   "version": "0.0.0",
+  "type": "commonjs",
   "private": true,
   "scripts": {
     "dev": "nodemon --exec \"npx ts-node --files -r tsconfig-paths/register src/app.ts\"",

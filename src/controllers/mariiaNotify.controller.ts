@@ -24,12 +24,16 @@ export const mariiaNotifyController = {
       res.status(200).json(successResponse);
     } catch (error) {
       console.error(error);
+      const mailError = error as { code?: string };
+      const isTimeout = mailError.code === "ETIMEDOUT";
       const errorResponse: ErrorResponse = {
         success: false,
-        message: EMAIL_MESSAGES.MAIL_FAILED,
+        message: isTimeout
+          ? EMAIL_MESSAGES.MAIL_TIMEOUT
+          : EMAIL_MESSAGES.MAIL_FAILED,
       };
 
-      return res.status(500).json(errorResponse);
+      return res.status(isTimeout ? 503 : 500).json(errorResponse);
     }
   },
 };

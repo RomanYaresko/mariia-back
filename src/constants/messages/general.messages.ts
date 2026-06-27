@@ -11,9 +11,4 @@ export const GENERAL_MESSAGES = {
   INVALID_ENV: "Invalid environment configuration",
   VALIDATION_FAILED: "Validation failed",
   CORS_ORIGIN_NOT_ALLOWED: "CORS origin not allowed",
-  SMTP_HOST_VALIDATION: "SMTP_HOST is required",
-  SMTP_PORT_VALIDATION: "SMTP_PORT must be between 1 and 65535",
-  SMTP_SECURE_VALIDATION: "SMTP_SECURE must be true or false",
-  SMTP_USER_VALIDATION: "SMTP_USER is required",
-  SMTP_PASS_VALIDATION: "SMTP_PASS is required",
 } as const;

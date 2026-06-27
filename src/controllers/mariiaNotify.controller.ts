@@ -1,39 +1,36 @@
 import { Request, Response } from "express";
 import { ErrorResponse, SuccessResponse } from "@/dtos/general.dto";
-import { transporter } from "@/config/nodemailer";
 import { EMAIL_MESSAGES } from "@/constants/messages/mail.messages";
 import { env } from "@/config/env";
+import { Resend } from "resend";
 
 export const mariiaNotifyController = {
   async notify(req: Request, res: Response) {
-    try {
-      const mailOptions = {
-        from: env.SMTP_USER,
-        to: env.SMTP_USER,
-        subject: EMAIL_MESSAGES.MAIL_SUBJECT,
-        text: `${req.user?.username} - ${EMAIL_MESSAGES.MAIL_TEXT}`,
-      };
+    const resend = new Resend(env.RESEND_API_KEY);
 
-      await transporter.sendMail(mailOptions);
-      const successResponse: SuccessResponse<object> = {
-        success: true,
-        message: EMAIL_MESSAGES.MAIL_SENT,
-        data: {},
-      };
+    const reponse = await resend.emails.send({
+      from: "roman@resend.dev",
+      to: [env.EMAIL],
+      subject: EMAIL_MESSAGES.MAIL_SUBJECT,
+      text: `${req.user?.username} - ${EMAIL_MESSAGES.MAIL_TEXT}`,
+    });
 
-      res.status(200).json(successResponse);
-    } catch (error) {
-      console.error(error);
-      const mailError = error as { code?: string };
-      const isTimeout = mailError.code === "ETIMEDOUT";
+    if (reponse.error) {
+      console.error(reponse.error);
       const errorResponse: ErrorResponse = {
         success: false,
-        message: isTimeout
-          ? EMAIL_MESSAGES.MAIL_TIMEOUT
-          : EMAIL_MESSAGES.MAIL_FAILED,
+        message: EMAIL_MESSAGES.MAIL_FAILED,
       };
 
-      return res.status(isTimeout ? 503 : 500).json(errorResponse);
+      return res.status(500).json(errorResponse);
     }
+
+    const successResponse: SuccessResponse<object> = {
+      success: true,
+      message: EMAIL_MESSAGES.MAIL_SENT,
+      data: {},
+    };
+
+    res.status(200).json(successResponse);
   },
 };

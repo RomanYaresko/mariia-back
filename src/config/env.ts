@@ -17,19 +17,8 @@ const EnvSchema = z.object({
   CORS_ALLOWED_ORIGINS: z
     .string()
     .min(1, GENERAL_MESSAGES.CORS_ALLOWED_ORIGINS_VALIDATION),
-  SMTP_HOST: z.string().min(1, GENERAL_MESSAGES.SMTP_HOST_VALIDATION),
-  SMTP_PORT: z.coerce
-    .number()
-    .int(GENERAL_MESSAGES.SMTP_PORT_VALIDATION)
-    .min(1, GENERAL_MESSAGES.SMTP_PORT_VALIDATION)
-    .max(65535, GENERAL_MESSAGES.SMTP_PORT_VALIDATION),
-  SMTP_SECURE: z
-    .enum(["true", "false"], {
-      error: GENERAL_MESSAGES.SMTP_SECURE_VALIDATION,
-    })
-    .transform((value) => value === "true"),
-  SMTP_USER: z.string().min(1, GENERAL_MESSAGES.SMTP_USER_VALIDATION),
-  SMTP_PASS: z.string().min(1, GENERAL_MESSAGES.SMTP_PASS_VALIDATION),
+  EMAIL: z.string().min(1),
+  RESEND_API_KEY: z.string().min(1),
 });
 
 const parsedEnv = EnvSchema.safeParse(process.env);
